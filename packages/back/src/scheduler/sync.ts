@@ -1,26 +1,21 @@
-import { and, eq, gte, inArray } from "drizzle-orm";
-import { Hono } from "hono";
-import { config } from "../config/env.js";
+import { eq } from "drizzle-orm";
+import cron from "node-cron";
 import { db } from "../db/connection.js";
 import { activities, users } from "../db/schema.js";
-import { type AuthEnv, authMiddleware } from "../middleware/auth.js";
 import { fetchActivities, getValidAccessToken } from "../services/strava.js";
 
-export const activitiesRoutes = new Hono<AuthEnv>();
+interface UserForSync {
+	id: number;
+	username: string | null;
+	accessToken: string | null;
+	refreshToken: string | null;
+	tokenExpiresAt: Date | null;
+}
 
-activitiesRoutes.use("*", authMiddleware);
-
-const TYPE_GROUPS: Record<string, string[]> = {
-	Run: ["Run", "TrailRun"],
-	Ride: ["Ride", "MountainBikeRide", "GravelRide", "EBikeRide", "VirtualRide"],
-	Swim: ["Swim"],
-};
-
-activitiesRoutes.post("/sync", async (c) => {
-	const user = c.get("user");
-
+async function syncUserActivities(user: UserForSync): Promise<number> {
 	if (!user.accessToken || !user.refreshToken) {
-		return c.json({ error: "Missing Strava tokens" }, 401);
+		console.log(`[Scheduler] User ${user.id} (${user.username}) has no tokens, skipping`);
+		return 0;
 	}
 
 	const tokens = await getValidAccessToken(
@@ -30,10 +25,11 @@ activitiesRoutes.post("/sync", async (c) => {
 	);
 
 	if (!tokens) {
-		return c.json({ error: "Unable to refresh Strava token" }, 401);
+		console.log(`[Scheduler] User ${user.id} (${user.username}) token refresh failed, skipping`);
+		return 0;
 	}
 
-	// Update tokens if refreshed
+	// Update tokens in DB if refreshed
 	if (tokens.accessToken !== user.accessToken) {
 		await db
 			.update(users)
@@ -100,28 +96,44 @@ activitiesRoutes.post("/sync", async (c) => {
 		page++;
 	}
 
-	return c.json({ synced: totalSynced });
-});
+	return totalSynced;
+}
 
-activitiesRoutes.get("/", async (c) => {
-	const user = c.get("user");
-	const typeFilter = c.req.query("type");
+async function syncAllUsers(): Promise<void> {
+	console.log("[Scheduler] Starting hourly sync for all users");
+	const allUsers = await db
+		.select({
+			id: users.id,
+			username: users.username,
+			accessToken: users.accessToken,
+			refreshToken: users.refreshToken,
+			tokenExpiresAt: users.tokenExpiresAt,
+		})
+		.from(users);
 
-	const conditions = [eq(activities.userId, user.id)];
+	console.log(`[Scheduler] Found ${allUsers.length} users to sync`);
 
-	if (typeFilter && TYPE_GROUPS[typeFilter]) {
-		conditions.push(inArray(activities.type, TYPE_GROUPS[typeFilter]));
+	for (const user of allUsers) {
+		try {
+			const synced = await syncUserActivities(user);
+			console.log(`[Scheduler] Synced ${synced} activities for user ${user.id} (${user.username})`);
+		} catch (error) {
+			console.error(`[Scheduler] Error syncing user ${user.id} (${user.username}):`, error);
+		}
+		// Wait 1 second between users to respect Strava rate limits
+		await new Promise((resolve) => setTimeout(resolve, 1000));
 	}
 
-	if (config.challenge.startDate) {
-		conditions.push(gte(activities.startDate, config.challenge.startDate));
-	}
+	console.log("[Scheduler] Hourly sync completed");
+}
 
-	const result = await db
-		.select()
-		.from(activities)
-		.where(and(...conditions))
-		.orderBy(activities.startDate);
+export function startScheduler(): void {
+	// Run every hour at minute 0
+	cron.schedule("0 * * * *", () => {
+		syncAllUsers().catch((error) => {
+			console.error("[Scheduler] Unhandled error in sync job:", error);
+		});
+	});
 
-	return c.json(result);
-});
+	console.log("[Scheduler] Hourly sync scheduler started");
+}

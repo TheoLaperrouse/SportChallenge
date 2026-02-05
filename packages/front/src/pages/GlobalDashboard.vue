@@ -2,9 +2,11 @@
 import { ref, watch } from "vue";
 import ActivityTypeFilter from "../components/ActivityTypeFilter.vue";
 import LeaderboardTable from "../components/LeaderboardTable.vue";
+import CumulativeDistanceChart from "../components/charts/CumulativeDistanceChart.vue";
 import { useApi } from "../composables/useApi.js";
 import type {
 	ActivityType,
+	AthleteTimeseries,
 	GlobalDashboardResponse,
 	GlobalStats,
 	LeaderboardEntry,
@@ -15,6 +17,7 @@ const { get } = useApi();
 const selectedType = ref<ActivityType>("Run");
 const leaderboard = ref<LeaderboardEntry[]>([]);
 const globalStats = ref<GlobalStats | null>(null);
+const timeseriesData = ref<AthleteTimeseries[]>([]);
 const loading = ref(false);
 
 function formatDistance(meters: string | null): string {
@@ -33,9 +36,13 @@ function formatDuration(seconds: string | null): string {
 async function loadData() {
 	loading.value = true;
 	try {
-		const data = await get<GlobalDashboardResponse>(`/dashboard/global?type=${selectedType.value}`);
-		leaderboard.value = data.leaderboard;
-		globalStats.value = data.stats;
+		const [globalData, timeseries] = await Promise.all([
+			get<GlobalDashboardResponse>(`/dashboard/global?type=${selectedType.value}`),
+			get<AthleteTimeseries[]>(`/dashboard/timeseries?type=${selectedType.value}`),
+		]);
+		leaderboard.value = globalData.leaderboard;
+		globalStats.value = globalData.stats;
+		timeseriesData.value = timeseries;
 	} finally {
 		loading.value = false;
 	}
@@ -69,6 +76,8 @@ watch(selectedType, () => loadData(), { immediate: true });
 				<p class="mt-1 text-2xl font-bold text-gray-900">{{ formatDuration(globalStats.totalMovingTime) }}</p>
 			</div>
 		</div>
+
+		<CumulativeDistanceChart :data="timeseriesData" />
 
 		<LeaderboardTable :leaderboard="leaderboard" />
 	</div>

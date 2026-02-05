@@ -9,6 +9,7 @@ import { activitiesRoutes } from "./routes/activities.js";
 import { authRoutes } from "./routes/auth.js";
 import { dashboardRoutes } from "./routes/dashboard.js";
 import { usersRoutes } from "./routes/users.js";
+import { startScheduler } from "./scheduler/sync.js";
 
 const app = new Hono();
 
@@ -31,6 +32,7 @@ app.get("/api/health", (c) => c.json({ status: "ok" }));
 const port = Number(process.env.PORT) || 3000;
 
 await runMigrations();
+startScheduler();
 console.log(`Server running on http://localhost:${port}`);
 
 serve({ fetch: app.fetch, port });

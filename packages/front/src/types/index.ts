@@ -62,3 +62,16 @@ export interface GlobalDashboardResponse {
 }
 
 export type ActivityType = "Run" | "Ride" | "Swim";
+
+export interface TimeseriesDataPoint {
+	date: string;
+	cumulativeDistance: number;
+}
+
+export interface AthleteTimeseries {
+	userId: number;
+	username: string | null;
+	firstname: string | null;
+	lastname: string | null;
+	data: TimeseriesDataPoint[];
+}
