@@ -36,10 +36,10 @@ const cards = [
 		<div
 			v-for="card in cards"
 			:key="card.label"
-			class="rounded-lg bg-white p-6 shadow"
+			class="rounded-lg border border-dark-border bg-dark-card p-6"
 		>
-			<p class="text-sm text-gray-500">{{ card.label }}</p>
-			<p class="mt-1 text-2xl font-bold text-gray-900">{{ card.getValue() }}</p>
+			<p class="text-sm text-concrete">{{ card.label }}</p>
+			<p class="mt-1 text-2xl font-bold text-punch">{{ card.getValue() }}</p>
 		</div>
 	</div>
 </template>

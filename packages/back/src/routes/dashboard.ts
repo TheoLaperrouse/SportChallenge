@@ -1,4 +1,4 @@
-import { and, avg, count, eq, gte, inArray, max, sql, sum } from "drizzle-orm";
+import { and, avg, count, desc, eq, gte, inArray, max, sql, sum } from "drizzle-orm";
 import { Hono } from "hono";
 import { config } from "../config/env.js";
 import { db } from "../db/connection.js";
@@ -168,4 +168,43 @@ dashboardRoutes.get("/timeseries", async (c) => {
 	}
 
 	return c.json(Array.from(userMap.values()));
+});
+
+dashboardRoutes.get("/recent", async (c) => {
+	const typeFilter = c.req.query("type");
+
+	const conditions = [];
+
+	if (typeFilter && TYPE_GROUPS[typeFilter]) {
+		conditions.push(inArray(activities.type, TYPE_GROUPS[typeFilter]));
+	}
+
+	if (config.challenge.startDate) {
+		conditions.push(gte(activities.startDate, config.challenge.startDate));
+	}
+
+	const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+	const recentActivities = await db
+		.select({
+			id: activities.id,
+			name: activities.name,
+			type: activities.type,
+			distance: activities.distance,
+			movingTime: activities.movingTime,
+			totalElevationGain: activities.totalElevationGain,
+			startDate: activities.startDate,
+			userId: users.id,
+			username: users.username,
+			firstname: users.firstname,
+			lastname: users.lastname,
+			avatarUrl: users.avatarUrl,
+		})
+		.from(activities)
+		.innerJoin(users, eq(activities.userId, users.id))
+		.where(whereClause)
+		.orderBy(desc(activities.startDate))
+		.limit(10);
+
+	return c.json(recentActivities);
 });

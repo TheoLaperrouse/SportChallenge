@@ -18,6 +18,11 @@ const props = defineProps<{
 	activities: Activity[];
 }>();
 
+// Colors from palette
+const PUNCH = "#FF6A00";
+const CONCRETE = "#8E8E8E";
+const OFFWHITE = "#F5F5F5";
+
 const chartData = computed(() => {
 	const monthly: Record<string, number> = {};
 
@@ -39,7 +44,7 @@ const chartData = computed(() => {
 			{
 				label: "Distance (km)",
 				data: sortedKeys.map((k) => Math.round(monthly[k] * 10) / 10),
-				backgroundColor: "rgba(234, 88, 12, 0.7)",
+				backgroundColor: PUNCH,
 				borderRadius: 4,
 			},
 		],
@@ -51,19 +56,28 @@ const chartOptions = {
 	maintainAspectRatio: false,
 	plugins: {
 		legend: { display: false },
-		title: { display: true, text: "Distance par mois" },
+		title: { display: true, text: "Distance par mois", color: OFFWHITE },
 	},
 	scales: {
-		y: { beginAtZero: true, title: { display: true, text: "km" } },
+		y: {
+			beginAtZero: true,
+			title: { display: true, text: "km", color: CONCRETE },
+			ticks: { color: CONCRETE },
+			grid: { color: "rgba(142, 142, 142, 0.2)" },
+		},
+		x: {
+			ticks: { color: CONCRETE },
+			grid: { color: "rgba(142, 142, 142, 0.2)" },
+		},
 	},
 };
 </script>
 
 <template>
-	<div class="rounded-lg bg-white p-6 shadow">
+	<div class="rounded-lg border border-dark-border bg-dark-card p-6">
 		<div class="h-64">
 			<Bar v-if="activities.length > 0" :data="chartData" :options="chartOptions" />
-			<p v-else class="flex h-full items-center justify-center text-sm text-gray-400">
+			<p v-else class="flex h-full items-center justify-center text-sm text-concrete">
 				Aucune donnée
 			</p>
 		</div>

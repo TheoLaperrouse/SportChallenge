@@ -5,25 +5,32 @@ const { user, logout } = useAuth();
 </script>
 
 <template>
-	<nav class="bg-white shadow">
+	<nav class="border-b border-dark-border bg-dark-card">
 		<div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-			<div class="flex h-16 justify-between items-center">
+			<div class="flex h-16 items-center justify-between">
 				<div class="flex items-center gap-8">
-					<span class="text-xl font-bold text-orange-600">Challenge Strava</span>
+					<span class="text-xl font-bold text-punch">Challenge Strava</span>
 					<div class="flex gap-4">
 						<router-link
 							to="/dashboard"
-							class="text-gray-700 hover:text-orange-600 px-3 py-2 text-sm font-medium"
-							active-class="text-orange-600 border-b-2 border-orange-600"
+							class="px-3 py-2 text-sm font-medium text-offwhite hover:text-punch"
+							active-class="text-punch border-b-2 border-punch"
 						>
 							Mon Dashboard
 						</router-link>
 						<router-link
 							to="/global"
-							class="text-gray-700 hover:text-orange-600 px-3 py-2 text-sm font-medium"
-							active-class="text-orange-600 border-b-2 border-orange-600"
+							class="px-3 py-2 text-sm font-medium text-offwhite hover:text-punch"
+							active-class="text-punch border-b-2 border-punch"
 						>
 							Classement
+						</router-link>
+						<router-link
+							to="/map"
+							class="px-3 py-2 text-sm font-medium text-offwhite hover:text-punch"
+							active-class="text-punch border-b-2 border-punch"
+						>
+							Carte
 						</router-link>
 					</div>
 				</div>
@@ -33,17 +40,17 @@ const { user, logout } = useAuth();
 							v-if="user.avatarUrl"
 							:src="user.avatarUrl"
 							:alt="user.firstname ?? ''"
-							class="h-8 w-8 rounded-full"
+							class="h-8 w-8 rounded-full ring-2 ring-punch"
 						/>
-						<span class="text-sm text-gray-700">
+						<span class="text-sm text-offwhite">
 							{{ user.firstname }} {{ user.lastname }}
 						</span>
 					</div>
 					<button
 						@click="logout"
-						class="rounded bg-gray-200 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-300"
+						class="rounded bg-dark-elevated px-3 py-1.5 text-sm text-concrete hover:bg-dark-border hover:text-offwhite"
 					>
-						Déconnexion
+						Deconnexion
 					</button>
 				</div>
 			</div>

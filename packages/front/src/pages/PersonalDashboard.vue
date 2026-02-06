@@ -46,13 +46,13 @@ watch(selectedType, () => loadData(), { immediate: true });
 <template>
 	<div class="space-y-6">
 		<div class="flex flex-wrap items-center justify-between gap-4">
-			<h1 class="text-2xl font-bold text-gray-900">Mon Dashboard</h1>
+			<h1 class="text-2xl font-bold text-offwhite">Mon Dashboard</h1>
 			<div class="flex items-center gap-4">
 				<ActivityTypeFilter v-model="selectedType" />
 				<button
 					@click="sync"
 					:disabled="syncing"
-					class="rounded-lg bg-orange-600 px-4 py-2 text-sm font-medium text-white hover:bg-orange-700 disabled:opacity-50"
+					class="rounded-lg bg-neon px-4 py-2 text-sm font-medium text-dark hover:bg-neon-light disabled:opacity-50"
 				>
 					{{ syncing ? 'Synchronisation...' : 'Synchroniser' }}
 				</button>

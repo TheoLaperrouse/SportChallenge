@@ -75,3 +75,34 @@ export interface AthleteTimeseries {
 	lastname: string | null;
 	data: TimeseriesDataPoint[];
 }
+
+export interface MapActivity {
+	id: number;
+	name: string | null;
+	type: string | null;
+	distance: number | null;
+	movingTime: number | null;
+	totalElevationGain: number | null;
+	startDate: string | null;
+	summaryPolyline: string | null;
+	startLatlng: string | null;
+	userId: number;
+	firstname: string | null;
+	lastname: string | null;
+	avatarUrl: string | null;
+}
+
+export interface RecentActivity {
+	id: number;
+	name: string | null;
+	type: string | null;
+	distance: number | null;
+	movingTime: number | null;
+	totalElevationGain: number | null;
+	startDate: string | null;
+	userId: number;
+	username: string | null;
+	firstname: string | null;
+	lastname: string | null;
+	avatarUrl: string | null;
+}

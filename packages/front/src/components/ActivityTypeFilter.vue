@@ -17,7 +17,7 @@ const types: { value: ActivityType; label: string }[] = [
 </script>
 
 <template>
-	<div class="flex gap-1 rounded-lg bg-gray-100 p-1">
+	<div class="flex gap-1 rounded-lg bg-dark-elevated p-1">
 		<button
 			v-for="type in types"
 			:key="type.value"
@@ -25,8 +25,8 @@ const types: { value: ActivityType; label: string }[] = [
 			:class="[
 				'rounded-md px-4 py-2 text-sm font-medium transition-colors',
 				modelValue === type.value
-					? 'bg-white text-orange-600 shadow'
-					: 'text-gray-600 hover:text-gray-900',
+					? 'bg-punch text-dark shadow'
+					: 'text-concrete hover:text-offwhite',
 			]"
 		>
 			{{ type.label }}

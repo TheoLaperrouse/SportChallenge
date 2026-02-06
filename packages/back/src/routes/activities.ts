@@ -76,6 +76,10 @@ activitiesRoutes.post("/sync", async (c) => {
 					averageHeartrate: activity.average_heartrate ?? null,
 					maxHeartrate: activity.max_heartrate ?? null,
 					sportType: activity.sport_type,
+					summaryPolyline: activity.map?.summary_polyline ?? null,
+					startLatlng: activity.start_latlng
+						? `${activity.start_latlng[0]},${activity.start_latlng[1]}`
+						: null,
 				})
 				.onConflictDoUpdate({
 					target: activities.stravaId,
@@ -89,6 +93,10 @@ activitiesRoutes.post("/sync", async (c) => {
 						maxSpeed: activity.max_speed,
 						averageHeartrate: activity.average_heartrate ?? null,
 						maxHeartrate: activity.max_heartrate ?? null,
+						summaryPolyline: activity.map?.summary_polyline ?? null,
+						startLatlng: activity.start_latlng
+							? `${activity.start_latlng[0]},${activity.start_latlng[1]}`
+							: null,
 					},
 				});
 			totalSynced++;

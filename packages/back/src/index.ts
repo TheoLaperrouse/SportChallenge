@@ -8,6 +8,7 @@ import { runMigrations } from "./db/migrate.js";
 import { activitiesRoutes } from "./routes/activities.js";
 import { authRoutes } from "./routes/auth.js";
 import { dashboardRoutes } from "./routes/dashboard.js";
+import { mapRoutes } from "./routes/map.js";
 import { usersRoutes } from "./routes/users.js";
 import { startScheduler } from "./scheduler/sync.js";
 
@@ -25,6 +26,7 @@ app.use(
 app.route("/api/auth", authRoutes);
 app.route("/api/activities", activitiesRoutes);
 app.route("/api/dashboard", dashboardRoutes);
+app.route("/api/map", mapRoutes);
 app.route("/api/users", usersRoutes);
 
 app.get("/api/health", (c) => c.json({ status: "ok" }));

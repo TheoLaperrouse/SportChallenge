@@ -20,26 +20,27 @@ function formatDuration(seconds: string | null): string {
 </script>
 
 <template>
-	<div class="overflow-x-auto rounded-lg bg-white shadow">
-		<table class="min-w-full divide-y divide-gray-200">
-			<thead class="bg-gray-50">
+	<div class="overflow-x-auto rounded-lg border border-dark-border bg-dark-card">
+		<table class="min-w-full divide-y divide-dark-border">
+			<thead class="bg-dark-elevated">
 				<tr>
-					<th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">#</th>
-					<th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-500">Athlète</th>
-					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">Activités</th>
-					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">Distance</th>
-					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">Temps</th>
-					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-500">D+</th>
+					<th class="px-4 py-3 text-left text-xs font-medium uppercase text-concrete">#</th>
+					<th class="px-4 py-3 text-left text-xs font-medium uppercase text-concrete">Athlète</th>
+					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-concrete">Activités</th>
+					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-concrete">Distance</th>
+					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-concrete">Temps</th>
+					<th class="px-4 py-3 text-right text-xs font-medium uppercase text-concrete">D+</th>
 				</tr>
 			</thead>
-			<tbody class="divide-y divide-gray-200">
-				<tr v-for="(entry, index) in leaderboard" :key="entry.userId" class="hover:bg-gray-50">
-					<td class="px-4 py-3 text-sm font-bold text-gray-900">
+			<tbody class="divide-y divide-dark-border">
+				<tr v-for="(entry, index) in leaderboard" :key="entry.userId" class="hover:bg-dark-elevated/50">
+					<td class="px-4 py-3 text-sm font-bold">
 						<span
 							:class="{
-								'text-yellow-500': index === 0,
-								'text-gray-400': index === 1,
-								'text-orange-400': index === 2,
+								'text-neon': index === 0,
+								'text-concrete': index === 1,
+								'text-punch': index === 2,
+								'text-offwhite': index > 2,
 							}"
 						>
 							{{ index + 1 }}
@@ -51,34 +52,34 @@ function formatDuration(seconds: string | null): string {
 								v-if="entry.avatarUrl"
 								:src="entry.avatarUrl"
 								:alt="entry.firstname ?? ''"
-								class="h-8 w-8 rounded-full"
+								class="h-8 w-8 rounded-full ring-2 ring-dark-border"
 							/>
 							<div
 								v-else
-								class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 text-xs font-medium text-gray-600"
+								class="flex h-8 w-8 items-center justify-center rounded-full bg-dark-elevated text-xs font-medium text-concrete"
 							>
 								{{ (entry.firstname?.[0] ?? '') + (entry.lastname?.[0] ?? '') }}
 							</div>
-							<span class="text-sm font-medium text-gray-900">
+							<span class="text-sm font-medium text-offwhite">
 								{{ entry.firstname }} {{ entry.lastname }}
 							</span>
 						</div>
 					</td>
-					<td class="px-4 py-3 text-right text-sm text-gray-900">
+					<td class="px-4 py-3 text-right text-sm text-concrete">
 						{{ entry.totalActivities }}
 					</td>
-					<td class="px-4 py-3 text-right text-sm font-semibold text-gray-900">
+					<td class="px-4 py-3 text-right text-sm font-semibold text-punch">
 						{{ formatDistance(entry.totalDistance) }}
 					</td>
-					<td class="px-4 py-3 text-right text-sm text-gray-900">
+					<td class="px-4 py-3 text-right text-sm text-offwhite">
 						{{ formatDuration(entry.totalMovingTime) }}
 					</td>
-					<td class="px-4 py-3 text-right text-sm text-gray-900">
+					<td class="px-4 py-3 text-right text-sm text-offwhite">
 						{{ entry.totalElevation ? `${Math.round(Number(entry.totalElevation))} m` : '0 m' }}
 					</td>
 				</tr>
 				<tr v-if="leaderboard.length === 0">
-					<td colspan="6" class="px-4 py-8 text-center text-sm text-gray-500">
+					<td colspan="6" class="px-4 py-8 text-center text-sm text-concrete">
 						Aucun participant pour le moment.
 					</td>
 				</tr>

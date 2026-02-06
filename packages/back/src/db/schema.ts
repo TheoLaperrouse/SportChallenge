@@ -1,4 +1,13 @@
-import { bigint, integer, pgTable, real, serial, timestamp, varchar } from "drizzle-orm/pg-core";
+import {
+	bigint,
+	integer,
+	pgTable,
+	real,
+	serial,
+	text,
+	timestamp,
+	varchar,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
 	id: serial("id").primaryKey(),
@@ -41,5 +50,7 @@ export const activities = pgTable("activities", {
 	averageHeartrate: real("average_heartrate"),
 	maxHeartrate: real("max_heartrate"),
 	sportType: varchar("sport_type", { length: 50 }),
+	summaryPolyline: text("summary_polyline"),
+	startLatlng: varchar("start_latlng", { length: 100 }),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });

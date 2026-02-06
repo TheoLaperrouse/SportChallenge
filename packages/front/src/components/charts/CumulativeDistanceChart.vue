@@ -1,39 +1,38 @@
 <script setup lang="ts">
 import {
-	CategoryScale,
 	Chart as ChartJS,
 	Legend,
 	LineElement,
 	LinearScale,
 	PointElement,
+	TimeScale,
 	Title,
 	Tooltip,
 } from "chart.js";
+import "chartjs-adapter-date-fns";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
 import type { AthleteTimeseries } from "../../types/index.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const props = defineProps<{
 	data: AthleteTimeseries[];
 }>();
 
-const COLORS = [
-	"rgb(234, 88, 12)",
-	"rgb(59, 130, 246)",
-	"rgb(34, 197, 94)",
-	"rgb(168, 85, 247)",
-	"rgb(236, 72, 153)",
-	"rgb(14, 165, 233)",
-	"rgb(245, 158, 11)",
-	"rgb(6, 182, 212)",
-];
+const CONCRETE = "#8E8E8E";
+const OFFWHITE = "#F5F5F5";
 
-function formatDate(dateStr: string): string {
-	const date = new Date(dateStr);
-	return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}`;
-}
+const COLORS = [
+	"#284b63",
+	"#b4b8ab",
+	"#153243",
+	"#f4f9e9",
+	"#eef0eb",
+	"#60A5FA",
+	"#22D3EE",
+	"#FB923C",
+];
 
 function getAthleteName(athlete: AthleteTimeseries): string {
 	if (athlete.firstname && athlete.lastname) {
@@ -64,7 +63,10 @@ const chartData = computed(() => {
 			if (value !== undefined) {
 				lastValue = value;
 			}
-			return Math.round((lastValue / 1000) * 10) / 10; // Convert to km with 1 decimal
+			return {
+				x: date,
+				y: Math.round((lastValue / 1000) * 10) / 10,
+			};
 		});
 
 		return {
@@ -77,32 +79,47 @@ const chartData = computed(() => {
 		};
 	});
 
-	return {
-		labels: sortedDates.map(formatDate),
-		datasets,
-	};
+	// eslint-disable-next-line -- Chart.js time scale accepts string dates at runtime
+	return { datasets } as never;
 });
 
 const chartOptions = {
 	responsive: true,
 	maintainAspectRatio: false,
 	plugins: {
-		legend: { display: true, position: "bottom" as const },
-		title: { display: true, text: "Distance cumulée par athlète" },
+		legend: { display: true, position: "bottom" as const, labels: { color: OFFWHITE } },
+		title: { display: true, text: "Distance cumulee par athlete", color: OFFWHITE },
 	},
 	scales: {
-		y: { beginAtZero: true, title: { display: true, text: "km" } },
-		x: { title: { display: true, text: "Date" } },
+		y: {
+			beginAtZero: true,
+			title: { display: true, text: "km", color: CONCRETE },
+			ticks: { color: CONCRETE },
+			grid: { color: "rgba(142, 142, 142, 0.2)" },
+		},
+		x: {
+			type: "time" as const,
+			time: {
+				unit: "day" as const,
+				displayFormats: {
+					day: "dd/MM",
+				},
+				tooltipFormat: "dd/MM/yyyy",
+			},
+			title: { display: true, text: "Date", color: CONCRETE },
+			ticks: { color: CONCRETE, maxTicksLimit: 15 },
+			grid: { color: "rgba(142, 142, 142, 0.2)" },
+		},
 	},
 };
 </script>
 
 <template>
-	<div class="rounded-lg bg-white p-6 shadow">
+	<div class="rounded-lg border border-dark-border bg-dark-card p-6">
 		<div class="h-80">
 			<Line v-if="data.length > 0" :data="chartData" :options="chartOptions" />
-			<p v-else class="flex h-full items-center justify-center text-sm text-gray-400">
-				Aucune donnée
+			<p v-else class="flex h-full items-center justify-center text-sm text-concrete">
+				Aucune donnee
 			</p>
 		</div>
 	</div>

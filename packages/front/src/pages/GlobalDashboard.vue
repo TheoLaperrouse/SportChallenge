@@ -2,6 +2,7 @@
 import { ref, watch } from "vue";
 import ActivityTypeFilter from "../components/ActivityTypeFilter.vue";
 import LeaderboardTable from "../components/LeaderboardTable.vue";
+import RecentActivitiesList from "../components/RecentActivitiesList.vue";
 import CumulativeDistanceChart from "../components/charts/CumulativeDistanceChart.vue";
 import { useApi } from "../composables/useApi.js";
 import type {
@@ -10,6 +11,7 @@ import type {
 	GlobalDashboardResponse,
 	GlobalStats,
 	LeaderboardEntry,
+	RecentActivity,
 } from "../types/index.js";
 
 const { get } = useApi();
@@ -18,6 +20,7 @@ const selectedType = ref<ActivityType>("Run");
 const leaderboard = ref<LeaderboardEntry[]>([]);
 const globalStats = ref<GlobalStats | null>(null);
 const timeseriesData = ref<AthleteTimeseries[]>([]);
+const recentActivities = ref<RecentActivity[]>([]);
 const loading = ref(false);
 
 function formatDistance(meters: string | null): string {
@@ -36,13 +39,15 @@ function formatDuration(seconds: string | null): string {
 async function loadData() {
 	loading.value = true;
 	try {
-		const [globalData, timeseries] = await Promise.all([
+		const [globalData, timeseries, recent] = await Promise.all([
 			get<GlobalDashboardResponse>(`/dashboard/global?type=${selectedType.value}`),
 			get<AthleteTimeseries[]>(`/dashboard/timeseries?type=${selectedType.value}`),
+			get<RecentActivity[]>(`/dashboard/recent?type=${selectedType.value}`),
 		]);
 		leaderboard.value = globalData.leaderboard;
 		globalStats.value = globalData.stats;
 		timeseriesData.value = timeseries;
+		recentActivities.value = recent;
 	} finally {
 		loading.value = false;
 	}
@@ -54,31 +59,34 @@ watch(selectedType, () => loadData(), { immediate: true });
 <template>
 	<div class="space-y-6">
 		<div class="flex flex-wrap items-center justify-between gap-4">
-			<h1 class="text-2xl font-bold text-gray-900">Classement Général</h1>
+			<h1 class="text-2xl font-bold text-offwhite">Classement Général</h1>
 			<ActivityTypeFilter v-model="selectedType" />
 		</div>
 
 		<div v-if="globalStats" class="grid grid-cols-2 gap-4 lg:grid-cols-4">
-			<div class="rounded-lg bg-white p-6 shadow">
-				<p class="text-sm text-gray-500">Participants</p>
-				<p class="mt-1 text-2xl font-bold text-gray-900">{{ globalStats.totalParticipants }}</p>
+			<div class="rounded-lg border border-dark-border bg-dark-card p-6">
+				<p class="text-sm text-concrete">Participants</p>
+				<p class="mt-1 text-2xl font-bold text-punch">{{ globalStats.totalParticipants }}</p>
 			</div>
-			<div class="rounded-lg bg-white p-6 shadow">
-				<p class="text-sm text-gray-500">Activités totales</p>
-				<p class="mt-1 text-2xl font-bold text-gray-900">{{ globalStats.totalActivities }}</p>
+			<div class="rounded-lg border border-dark-border bg-dark-card p-6">
+				<p class="text-sm text-concrete">Activités totales</p>
+				<p class="mt-1 text-2xl font-bold text-punch">{{ globalStats.totalActivities }}</p>
 			</div>
-			<div class="rounded-lg bg-white p-6 shadow">
-				<p class="text-sm text-gray-500">Distance totale</p>
-				<p class="mt-1 text-2xl font-bold text-gray-900">{{ formatDistance(globalStats.totalDistance) }}</p>
+			<div class="rounded-lg border border-dark-border bg-dark-card p-6">
+				<p class="text-sm text-concrete">Distance totale</p>
+				<p class="mt-1 text-2xl font-bold text-punch">{{ formatDistance(globalStats.totalDistance) }}</p>
 			</div>
-			<div class="rounded-lg bg-white p-6 shadow">
-				<p class="text-sm text-gray-500">Temps total</p>
-				<p class="mt-1 text-2xl font-bold text-gray-900">{{ formatDuration(globalStats.totalMovingTime) }}</p>
+			<div class="rounded-lg border border-dark-border bg-dark-card p-6">
+				<p class="text-sm text-concrete">Temps total</p>
+				<p class="mt-1 text-2xl font-bold text-punch">{{ formatDuration(globalStats.totalMovingTime) }}</p>
 			</div>
 		</div>
 
 		<CumulativeDistanceChart :data="timeseriesData" />
 
-		<LeaderboardTable :leaderboard="leaderboard" />
+		<div class="grid gap-6 lg:grid-cols-2">
+			<LeaderboardTable :leaderboard="leaderboard" />
+			<RecentActivitiesList :activities="recentActivities" />
+		</div>
 	</div>
 </template>

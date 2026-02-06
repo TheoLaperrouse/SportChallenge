@@ -84,6 +84,8 @@ export interface StravaActivity {
 	max_speed: number;
 	average_heartrate?: number;
 	max_heartrate?: number;
+	map?: { summary_polyline: string | null };
+	start_latlng?: [number, number] | null;
 }
 
 export async function fetchActivities(

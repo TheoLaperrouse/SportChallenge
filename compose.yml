@@ -28,6 +28,7 @@ services:
       STRAVA_REDIRECT_URI: ${STRAVA_REDIRECT_URI:-http://localhost:5173/api/auth/callback}
       SESSION_SECRET: ${SESSION_SECRET:-change-me-in-production-32chars!}
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:5173}
+      CHALLENGE_START_DATE: ${CHALLENGE_START_DATE:-2024-01-01T00:00:00.000Z}
       PORT: "3000"
       NODE_ENV: production
     depends_on:
