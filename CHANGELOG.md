@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/TheoLaperrouse/ChallengeStravaV2/compare/v1.1.0...v1.2.0) (2026-02-09)
+
+
+### Features
+
+* responsive / delete synchro ([e79cf07](https://github.com/TheoLaperrouse/ChallengeStravaV2/commit/e79cf07c6a01057ce833ceacf7f191148d435061))
+
 # [1.1.0](https://github.com/TheoLaperrouse/ChallengeStravaV2/compare/v1.0.0...v1.1.0) (2026-02-06)
 
 
