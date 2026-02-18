@@ -76,6 +76,19 @@ export interface AthleteTimeseries {
 	data: TimeseriesDataPoint[];
 }
 
+export interface ElevationTimeseriesDataPoint {
+	date: string;
+	cumulativeElevation: number;
+}
+
+export interface AthleteElevationTimeseries {
+	userId: number;
+	username: string | null;
+	firstname: string | null;
+	lastname: string | null;
+	data: ElevationTimeseriesDataPoint[];
+}
+
 export interface MapActivity {
 	id: number;
 	name: string | null;

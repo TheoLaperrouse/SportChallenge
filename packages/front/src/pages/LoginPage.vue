@@ -55,21 +55,21 @@ const features = [
 					<span class="text-punch"> Challenge</span>
 				</h1>
 				<p class="mx-auto mt-6 max-w-2xl text-xl leading-relaxed text-concrete">
-					Relevez le challenge entre amis ! Synchronisez vos activit&eacute;s sportives, suivez
-					vos performances et d&eacute;couvrez qui parcourt le plus de kilom&egrave;tres.
+					Relevez le challenge entre amis ! Synchronisez vos activités sportives, suivez
+					vos performances et découvrez qui parcourt le plus de kilomètres.
 				</p>
 
 				<div class="mt-10 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-					<button
-						@click="login"
-						class="transition-all hover:scale-105 active:scale-100"
-					>
-						<img
-							src="/btn_strava_connectwith_orange.svg"
-							alt="Connect with Strava"
-							class="h-12"
-						/>
-					</button>
+						<button
+							@click="login"
+							class="transition-all hover:scale-105 active:scale-100"
+						>
+							<img
+								src="/btn_strava_connectwith_orange.svg"
+								alt="Connect with Strava"
+								class="h-12"
+							/>
+						</button>
 					<a
 						href="#features"
 						class="inline-flex items-center gap-2 rounded-xl border-2 border-concrete/40 px-6 py-4 text-lg font-semibold text-offwhite backdrop-blur-sm transition-colors hover:border-punch hover:text-punch"
@@ -87,10 +87,10 @@ const features = [
 		<section id="features" class="bg-dark-card px-6 py-20 sm:px-12 lg:px-24">
 			<div class="mx-auto max-w-5xl">
 				<h2 class="text-center text-3xl font-bold text-offwhite sm:text-4xl">
-					Comment &ccedil;a marche ?
+					Comment ça marche ?
 				</h2>
 				<p class="mx-auto mt-4 max-w-2xl text-center text-lg text-concrete">
-					Trois &eacute;tapes suffisent pour rejoindre le challenge et comparer vos performances.
+					Trois étapes suffisent pour rejoindre le challenge et comparer vos performances.
 				</p>
 
 				<div class="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
@@ -127,7 +127,7 @@ const features = [
 		<section class="bg-dark px-6 py-20 sm:px-12 lg:px-24">
 			<div class="mx-auto max-w-3xl">
 				<h2 class="text-center text-3xl font-bold text-offwhite sm:text-4xl">
-					Pr&ecirc;t en 3 &eacute;tapes
+					Pr&ecirc;t en 3 étapes
 				</h2>
 				<div class="mt-14 space-y-10">
 					<div class="flex gap-6">
@@ -137,7 +137,7 @@ const features = [
 						<div>
 							<h3 class="text-lg font-semibold text-offwhite">Connectez votre compte Strava</h3>
 							<p class="mt-1 text-concrete">
-								Authentifiez-vous en un clic via Strava OAuth. Aucun mot de passe &agrave; cr&eacute;er.
+								Authentifiez-vous en un clic via Strava OAuth. Aucun mot de passe &agrave; créer.
 							</p>
 						</div>
 					</div>
@@ -146,9 +146,9 @@ const features = [
 							2
 						</div>
 						<div>
-							<h3 class="text-lg font-semibold text-offwhite">Synchronisez vos activit&eacute;s</h3>
+							<h3 class="text-lg font-semibold text-offwhite">Synchronisez vos activités</h3>
 							<p class="mt-1 text-concrete">
-								Importez l'historique de vos courses, sorties v&eacute;lo et s&eacute;ances de natation
+								Importez l'historique de vos courses, sorties vélo et séances de natation
 								depuis Strava.
 							</p>
 						</div>
@@ -160,8 +160,8 @@ const features = [
 						<div>
 							<h3 class="text-lg font-semibold text-offwhite">Comparez et progressez</h3>
 							<p class="mt-1 text-concrete">
-								Consultez vos stats, suivez votre progression et d&eacute;fiez vos amis au classement
-								g&eacute;n&eacute;ral.
+								Consultez vos stats, suivez votre progression et défiez vos amis au classement
+								général.
 							</p>
 						</div>
 					</div>
@@ -190,9 +190,9 @@ const features = [
 				</button>
 				<router-link
 					to="/privacy"
-					class="mt-4 inline-block text-sm text-concrete hover:text-offwhite"
+					class="mt-4 block text-sm text-concrete hover:text-offwhite"
 				>
-					Politique de confidentialit&eacute;
+					Politique de confidentialité
 				</router-link>
 			</div>
 		</section>

@@ -23,16 +23,34 @@ function formatElevation(meters: string | null): string {
 	return `${Math.round(Number(meters))} m`;
 }
 
+function formatSpeed(ms: string | null): string {
+	if (!ms) return "0 km/h";
+	return `${(Number(ms) * 3.6).toFixed(1)} km/h`;
+}
+
+function formatHeartrate(bpm: string | null): string {
+	if (!bpm) return "-";
+	return `${Math.round(Number(bpm))} bpm`;
+}
+
+function formatMaxDistance(meters: number | null): string {
+	if (!meters) return "0 km";
+	return `${(meters / 1000).toFixed(2)} km`;
+}
+
 const cards = [
 	{ label: "Activités", getValue: () => props.stats?.totalActivities ?? 0 },
 	{ label: "Distance totale", getValue: () => formatDistance(props.stats?.totalDistance ?? null) },
 	{ label: "Temps total", getValue: () => formatDuration(props.stats?.totalMovingTime ?? null) },
 	{ label: "Dénivelé total", getValue: () => formatElevation(props.stats?.totalElevation ?? null) },
+	{ label: "Vitesse moy.", getValue: () => formatSpeed(props.stats?.avgSpeed ?? null) },
+	{ label: "FC moyenne", getValue: () => formatHeartrate(props.stats?.avgHeartrate ?? null) },
+	{ label: "Distance max", getValue: () => formatMaxDistance(props.stats?.maxDistance ?? null) },
 ];
 </script>
 
 <template>
-	<div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+	<div class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-7">
 		<div
 			v-for="card in cards"
 			:key="card.label"

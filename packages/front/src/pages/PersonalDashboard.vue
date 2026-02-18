@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
+import ActivityStreak from "../components/ActivityStreak.vue";
 import ActivityTable from "../components/ActivityTable.vue";
 import ActivityTypeFilter from "../components/ActivityTypeFilter.vue";
+import PersonalRecords from "../components/PersonalRecords.vue";
 import StatsCards from "../components/StatsCards.vue";
 import ActivityChart from "../components/charts/ActivityChart.vue";
+import ActivityHeatmap from "../components/charts/ActivityHeatmap.vue";
 import DistanceChart from "../components/charts/DistanceChart.vue";
+import SpeedChart from "../components/charts/SpeedChart.vue";
 import { useApi } from "../composables/useApi.js";
 import type { Activity, ActivityType, PersonalStats } from "../types/index.js";
 
@@ -40,6 +44,15 @@ watch(selectedType, () => loadData(), { immediate: true });
 		</div>
 
 		<StatsCards :stats="stats" />
+
+		<ActivityHeatmap :activities="activities" />
+
+		<PersonalRecords :activities="activities" />
+
+		<div class="grid gap-6 lg:grid-cols-2">
+			<ActivityStreak :activities="activities" />
+			<SpeedChart :activities="activities" />
+		</div>
 
 		<div class="grid gap-6 lg:grid-cols-2">
 			<DistanceChart :activities="activities" />

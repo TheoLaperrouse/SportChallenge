@@ -170,6 +170,79 @@ dashboardRoutes.get("/timeseries", async (c) => {
 	return c.json(Array.from(userMap.values()));
 });
 
+dashboardRoutes.get("/elevation-timeseries", async (c) => {
+	const typeFilter = c.req.query("type");
+
+	const conditions = [];
+
+	if (typeFilter && TYPE_GROUPS[typeFilter]) {
+		conditions.push(inArray(activities.type, TYPE_GROUPS[typeFilter]));
+	}
+
+	if (config.challenge.startDate) {
+		conditions.push(gte(activities.startDate, config.challenge.startDate));
+	}
+
+	const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+	const dailyData = await db
+		.select({
+			userId: activities.userId,
+			username: users.username,
+			firstname: users.firstname,
+			lastname: users.lastname,
+			date: sql<string>`DATE(${activities.startDate})`.as("date"),
+			totalElevation: sum(activities.totalElevationGain),
+		})
+		.from(activities)
+		.innerJoin(users, eq(activities.userId, users.id))
+		.where(whereClause)
+		.groupBy(
+			activities.userId,
+			users.username,
+			users.firstname,
+			users.lastname,
+			sql`DATE(${activities.startDate})`,
+		)
+		.orderBy(activities.userId, sql`DATE(${activities.startDate})`);
+
+	const userMap = new Map<
+		number,
+		{
+			userId: number;
+			username: string | null;
+			firstname: string | null;
+			lastname: string | null;
+			data: { date: string; cumulativeElevation: number }[];
+		}
+	>();
+
+	for (const row of dailyData) {
+		if (!userMap.has(row.userId)) {
+			userMap.set(row.userId, {
+				userId: row.userId,
+				username: row.username,
+				firstname: row.firstname,
+				lastname: row.lastname,
+				data: [],
+			});
+		}
+
+		const userData = userMap.get(row.userId);
+		if (!userData) continue;
+		const prevCumulative =
+			userData.data.length > 0 ? userData.data[userData.data.length - 1].cumulativeElevation : 0;
+		const elevation = Number(row.totalElevation) || 0;
+
+		userData.data.push({
+			date: row.date,
+			cumulativeElevation: prevCumulative + elevation,
+		});
+	}
+
+	return c.json(Array.from(userMap.values()));
+});
+
 dashboardRoutes.get("/recent", async (c) => {
 	const typeFilter = c.req.query("type");
 

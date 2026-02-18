@@ -1,4 +1,4 @@
-import { and, eq, gte, inArray } from "drizzle-orm";
+import { and, desc, eq, gte, inArray } from "drizzle-orm";
 import { Hono } from "hono";
 import { config } from "../config/env.js";
 import { db } from "../db/connection.js";
@@ -129,7 +129,7 @@ activitiesRoutes.get("/", async (c) => {
 		.select()
 		.from(activities)
 		.where(and(...conditions))
-		.orderBy(activities.startDate);
+		.orderBy(desc(activities.startDate));
 
 	return c.json(result);
 });

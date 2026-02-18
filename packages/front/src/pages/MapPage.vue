@@ -17,19 +17,26 @@ const mapContainer = ref<HTMLDivElement | null>(null);
 let map: L.Map | null = null;
 let polylineLayer: L.LayerGroup | null = null;
 
-const TYPE_COLORS: Record<string, string> = {
-	Run: "#284b63",
-	TrailRun: "#153243",
-	Ride: "#b4b8ab",
-	MountainBikeRide: "#8a8e82",
-	GravelRide: "#9da18f",
-	EBikeRide: "#A78BFA",
-	VirtualRide: "#60A5FA",
-	Swim: "#22D3EE",
-};
+const ATHLETE_COLORS = [
+	"#F87171",
+	"#60A5FA",
+	"#34D399",
+	"#FBBF24",
+	"#A78BFA",
+	"#FB923C",
+	"#22D3EE",
+	"#F472B6",
+	"#818CF8",
+	"#4ADE80",
+];
 
-function getRouteColor(type: string | null): string {
-	return TYPE_COLORS[type ?? ""] ?? "#b4b8ab";
+const athleteColorMap = new Map<number, string>();
+
+function getAthleteColor(userId: number): string {
+	if (!athleteColorMap.has(userId)) {
+		athleteColorMap.set(userId, ATHLETE_COLORS[athleteColorMap.size % ATHLETE_COLORS.length]);
+	}
+	return athleteColorMap.get(userId) ?? ATHLETE_COLORS[0];
 }
 
 function formatDistance(meters: number | null): string {
@@ -55,7 +62,7 @@ function buildPopupContent(activity: MapActivity): string {
 	const date = activity.startDate ? new Date(activity.startDate).toLocaleDateString("fr-FR") : "";
 	return `
 		<div style="font-family: sans-serif; color: #f4f9e9; padding: 4px; min-width: 200px;">
-			<div style="font-weight: bold; color: #284b63; margin-bottom: 4px;">
+			<div style="font-weight: bold; color: #ffffff; margin-bottom: 4px;">
 				${activity.name ?? "Sans nom"}
 			</div>
 			<div style="font-size: 12px; color: #b4b8ab; margin-bottom: 6px;">
@@ -73,6 +80,7 @@ function buildPopupContent(activity: MapActivity): string {
 function renderRoutes() {
 	if (!map || !polylineLayer) return;
 	polylineLayer.clearLayers();
+	athleteColorMap.clear();
 
 	const bounds: L.LatLng[] = [];
 
@@ -86,7 +94,7 @@ function renderRoutes() {
 		bounds.push(...latLngs);
 
 		const line = L.polyline(latLngs, {
-			color: getRouteColor(activity.type),
+			color: getAthleteColor(activity.userId),
 			weight: 3,
 			opacity: 0.7,
 		});

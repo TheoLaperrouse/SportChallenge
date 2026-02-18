@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import ActivityTypeFilter from "../components/ActivityTypeFilter.vue";
+import ElevationRatioTable from "../components/ElevationRatioTable.vue";
 import LeaderboardTable from "../components/LeaderboardTable.vue";
 import RecentActivitiesList from "../components/RecentActivitiesList.vue";
 import CumulativeDistanceChart from "../components/charts/CumulativeDistanceChart.vue";
+import CumulativeElevationChart from "../components/charts/CumulativeElevationChart.vue";
 import { useApi } from "../composables/useApi.js";
 import type {
 	ActivityType,
+	AthleteElevationTimeseries,
 	AthleteTimeseries,
 	GlobalDashboardResponse,
 	GlobalStats,
@@ -20,6 +23,7 @@ const selectedType = ref<ActivityType>("Run");
 const leaderboard = ref<LeaderboardEntry[]>([]);
 const globalStats = ref<GlobalStats | null>(null);
 const timeseriesData = ref<AthleteTimeseries[]>([]);
+const elevationTimeseriesData = ref<AthleteElevationTimeseries[]>([]);
 const recentActivities = ref<RecentActivity[]>([]);
 const loading = ref(false);
 
@@ -39,14 +43,18 @@ function formatDuration(seconds: string | null): string {
 async function loadData() {
 	loading.value = true;
 	try {
-		const [globalData, timeseries, recent] = await Promise.all([
+		const [globalData, timeseries, elevationTimeseries, recent] = await Promise.all([
 			get<GlobalDashboardResponse>(`/dashboard/global?type=${selectedType.value}`),
 			get<AthleteTimeseries[]>(`/dashboard/timeseries?type=${selectedType.value}`),
+			get<AthleteElevationTimeseries[]>(
+				`/dashboard/elevation-timeseries?type=${selectedType.value}`,
+			),
 			get<RecentActivity[]>(`/dashboard/recent?type=${selectedType.value}`),
 		]);
 		leaderboard.value = globalData.leaderboard;
 		globalStats.value = globalData.stats;
 		timeseriesData.value = timeseries;
+		elevationTimeseriesData.value = elevationTimeseries;
 		recentActivities.value = recent;
 	} finally {
 		loading.value = false;
@@ -84,9 +92,13 @@ watch(selectedType, () => loadData(), { immediate: true });
 
 		<CumulativeDistanceChart :data="timeseriesData" />
 
+		<CumulativeElevationChart :data="elevationTimeseriesData" />
+
 		<div class="grid gap-6 lg:grid-cols-2">
 			<LeaderboardTable :leaderboard="leaderboard" />
 			<RecentActivitiesList :activities="recentActivities" />
 		</div>
+
+		<ElevationRatioTable :leaderboard="leaderboard" />
 	</div>
 </template>
