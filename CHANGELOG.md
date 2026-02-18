@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.2.0...v1.3.0) (2026-02-18)
+
+
+### Features
+
+* add some widgets in dashboards ([47c51df](https://github.com/TheoLaperrouse/SportChallenge/commit/47c51df805e6bf8ebf7976bcd912312050c508c2))
+
 # [1.2.0](https://github.com/TheoLaperrouse/ChallengeStravaV2/compare/v1.1.0...v1.2.0) (2026-02-09)
 
 
