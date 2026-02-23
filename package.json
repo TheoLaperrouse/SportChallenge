@@ -1,6 +1,6 @@
 {
   "name": "sport-challenge",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "private": true,
   "scripts": {
     "dev:back": "pnpm --filter back dev",

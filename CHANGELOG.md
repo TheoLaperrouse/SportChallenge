@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.4.0...v1.5.0) (2026-02-23)
+
+
+### Features
+
+* small improvments on dashboard / sync on connect ([2c7397e](https://github.com/TheoLaperrouse/SportChallenge/commit/2c7397e6629d9e2a9750e77078cc4e95da548a0b))
+
 # [1.4.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.3.0...v1.4.0) (2026-02-18)
 
 
