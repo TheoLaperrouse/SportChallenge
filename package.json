@@ -1,29 +1,26 @@
 {
-  "name": "sport-challenge",
-  "version": "1.4.0",
-  "private": true,
-  "scripts": {
-    "dev:back": "pnpm --filter back dev",
-    "dev:front": "pnpm --filter front dev",
-    "build:back": "pnpm --filter back build",
-    "build:front": "pnpm --filter front build",
-    "lint": "biome check .",
-    "lint:fix": "biome check --write .",
-    "format": "biome format --write .",
-    "db:generate": "pnpm --filter back db:generate",
-    "db:migrate": "pnpm --filter back db:migrate"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "esbuild"
-    ]
-  },
-  "devDependencies": {
-    "@biomejs/biome": "^1.9.4",
-    "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/git": "^10.0.1",
-    "semantic-release": "^24.2.0",
-    "typescript": "^5.7.2"
-  }
+	"name": "sport-challenge",
+	"version": "1.4.0",
+	"private": true,
+	"scripts": {
+		"dev:back": "pnpm --filter back dev",
+		"dev:front": "pnpm --filter front dev",
+		"build:back": "pnpm --filter back build",
+		"build:front": "pnpm --filter front build",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"db:generate": "pnpm --filter back db:generate",
+		"db:migrate": "pnpm --filter back db:migrate"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.4",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/git": "^10.0.1",
+		"semantic-release": "^24.2.0",
+		"typescript": "^5.7.2"
+	}
 }

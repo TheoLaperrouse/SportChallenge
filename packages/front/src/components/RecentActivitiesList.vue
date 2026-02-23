@@ -49,14 +49,14 @@ function getActivityIcon(type: string | null): string {
 
 <template>
 	<div class="rounded-lg border border-dark-border bg-dark-card">
-		<div class="border-b border-dark-border px-6 py-4">
+		<div class="border-b border-dark-border px-4 py-4 sm:px-6">
 			<h2 class="text-lg font-semibold text-offwhite">Activités récentes</h2>
 		</div>
 		<ul class="divide-y divide-dark-border">
 			<li
 				v-for="activity in activities"
 				:key="activity.id"
-				class="flex items-center gap-4 px-6 py-4 hover:bg-dark-elevated/50"
+				class="flex items-center gap-3 px-4 py-3 hover:bg-dark-elevated/50 sm:gap-4 sm:px-6 sm:py-4"
 			>
 				<!-- Activity icon -->
 				<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-punch/20 text-punch">
@@ -105,7 +105,7 @@ function getActivityIcon(type: string | null): string {
 				</div>
 
 				<!-- Date -->
-				<div class="text-right text-xs text-concrete">
+				<div class="shrink-0 text-right text-xs text-concrete">
 					{{ formatDate(activity.startDate) }}
 				</div>
 			</li>

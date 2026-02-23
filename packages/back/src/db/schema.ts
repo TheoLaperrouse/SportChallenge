@@ -6,6 +6,7 @@ import {
 	serial,
 	text,
 	timestamp,
+	unique,
 	varchar,
 } from "drizzle-orm/pg-core";
 
@@ -52,5 +53,34 @@ export const activities = pgTable("activities", {
 	sportType: varchar("sport_type", { length: 50 }),
 	summaryPolyline: text("summary_polyline"),
 	startLatlng: varchar("start_latlng", { length: 100 }),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const distanceSnapshots = pgTable(
+	"distance_snapshots",
+	{
+		id: serial("id").primaryKey(),
+		userId: integer("user_id")
+			.references(() => users.id, { onDelete: "cascade" })
+			.notNull(),
+		activityType: varchar("activity_type", { length: 50 }).notNull(),
+		totalDistance: real("total_distance").notNull().default(0),
+		updatedAt: timestamp("updated_at").defaultNow().notNull(),
+	},
+	(t) => [unique("uniq_snapshot_user_type").on(t.userId, t.activityType)],
+);
+
+export const notifications = pgTable("notifications", {
+	id: serial("id").primaryKey(),
+	userId: integer("user_id")
+		.references(() => users.id, { onDelete: "cascade" })
+		.notNull(),
+	type: varchar("type", { length: 20 }).notNull(), // "overtook" | "overtaken"
+	message: text("message").notNull(),
+	relatedUserId: integer("related_user_id")
+		.references(() => users.id, { onDelete: "cascade" })
+		.notNull(),
+	activityType: varchar("activity_type", { length: 50 }).notNull(),
+	readAt: timestamp("read_at"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 });

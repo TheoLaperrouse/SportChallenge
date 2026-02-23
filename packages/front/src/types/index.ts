@@ -119,3 +119,21 @@ export interface RecentActivity {
 	lastname: string | null;
 	avatarUrl: string | null;
 }
+
+export interface Notification {
+	id: number;
+	type: "overtook" | "overtaken";
+	message: string;
+	activityType: string;
+	readAt: string | null;
+	createdAt: string;
+	relatedUserId: number;
+	relatedFirstname: string | null;
+	relatedLastname: string | null;
+	relatedAvatarUrl: string | null;
+}
+
+export interface NotificationsResponse {
+	notifications: Notification[];
+	unreadCount: number;
+}

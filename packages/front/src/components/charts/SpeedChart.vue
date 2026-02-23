@@ -82,7 +82,7 @@ const chartOptions = {
 			grid: { color: "rgba(142, 142, 142, 0.2)" },
 		},
 		x: {
-			ticks: { color: CONCRETE },
+			ticks: { color: CONCRETE, maxTicksLimit: 8 },
 			grid: { color: "rgba(142, 142, 142, 0.2)" },
 		},
 	},

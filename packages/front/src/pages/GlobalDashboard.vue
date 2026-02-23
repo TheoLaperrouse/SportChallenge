@@ -66,7 +66,7 @@ watch(selectedType, () => loadData(), { immediate: true });
 
 <template>
 	<div class="space-y-6">
-		<div class="flex flex-wrap items-center justify-between gap-4">
+		<div class="flex flex-col gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
 			<h1 class="text-2xl font-bold text-offwhite">Classement Général</h1>
 			<ActivityTypeFilter v-model="selectedType" />
 		</div>

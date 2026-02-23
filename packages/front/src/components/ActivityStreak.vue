@@ -45,7 +45,9 @@ const streakData = computed(() => {
 	const today = new Date();
 	today.setHours(0, 0, 0, 0);
 	const lastActivityDate = new Date(sortedDates[sortedDates.length - 1]);
-	const daysSinceLast = Math.round((today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24));
+	const daysSinceLast = Math.round(
+		(today.getTime() - lastActivityDate.getTime()) / (1000 * 60 * 60 * 24),
+	);
 
 	const lastStreak = streaks[streaks.length - 1];
 	const current = daysSinceLast <= 1 ? lastStreak : 0;

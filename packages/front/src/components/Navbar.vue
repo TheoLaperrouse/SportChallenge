@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { useAuth } from "../composables/useAuth.js";
+import NotificationBell from "./NotificationBell.vue";
 
 const { user, logout, deleteAccount } = useAuth();
 const mobileMenuOpen = ref(false);
@@ -46,7 +47,7 @@ function confirmDeleteAccount() {
 						</router-link>
 					</div>
 				</div>
-				<div class="flex items-center gap-4">
+				<div class="flex items-center gap-2 sm:gap-4">
 					<div v-if="user" class="flex items-center gap-2">
 						<img
 							v-if="user.avatarUrl"
@@ -58,6 +59,7 @@ function confirmDeleteAccount() {
 							{{ user.firstname }} {{ user.lastname }}
 						</span>
 					</div>
+					<NotificationBell />
 					<button
 						@click="confirmDeleteAccount"
 						class="hidden rounded bg-dark-elevated px-3 py-1.5 text-sm text-red-400 hover:bg-red-500/20 hover:text-red-300 md:block"
