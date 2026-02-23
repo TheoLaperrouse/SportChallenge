@@ -12,7 +12,7 @@ interface UserForSync {
 	tokenExpiresAt: Date | null;
 }
 
-async function syncUserActivities(user: UserForSync): Promise<number> {
+export async function syncUserActivities(user: UserForSync): Promise<number> {
 	if (!user.accessToken || !user.refreshToken) {
 		console.log(`[Scheduler] User ${user.id} (${user.username}) has no tokens, skipping`);
 		return 0;

@@ -23,27 +23,35 @@ const NEON = "#FFD500";
 const CONCRETE = "#8E8E8E";
 const OFFWHITE = "#F5F5F5";
 
+function getWeekMonday(date: Date): string {
+	const d = new Date(date);
+	d.setHours(0, 0, 0, 0);
+	d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+	return d.toISOString().split("T")[0];
+}
+
+function formatWeekLabel(isoDate: string): string {
+	const [year, month, day] = isoDate.split("-");
+	return `${day}/${month}/${year.slice(2)}`;
+}
+
 const chartData = computed(() => {
-	const monthly: Record<string, number> = {};
+	const weekly: Record<string, number> = {};
 
 	for (const a of props.activities) {
 		if (!a.startDate) continue;
-		const date = new Date(a.startDate);
-		const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-		monthly[key] = (monthly[key] ?? 0) + 1;
+		const key = getWeekMonday(new Date(a.startDate));
+		weekly[key] = (weekly[key] ?? 0) + 1;
 	}
 
-	const sortedKeys = Object.keys(monthly).sort();
+	const sortedKeys = Object.keys(weekly).sort();
 
 	return {
-		labels: sortedKeys.map((k) => {
-			const [year, month] = k.split("-");
-			return `${month}/${year}`;
-		}),
+		labels: sortedKeys.map(formatWeekLabel),
 		datasets: [
 			{
 				label: "Nombre d'activités",
-				data: sortedKeys.map((k) => monthly[k]),
+				data: sortedKeys.map((k) => weekly[k]),
 				backgroundColor: NEON,
 				borderRadius: 4,
 			},
@@ -56,7 +64,7 @@ const chartOptions = {
 	maintainAspectRatio: false,
 	plugins: {
 		legend: { display: false },
-		title: { display: true, text: "Activités par mois", color: OFFWHITE },
+		title: { display: true, text: "Activités par semaine", color: OFFWHITE },
 	},
 	scales: {
 		y: {

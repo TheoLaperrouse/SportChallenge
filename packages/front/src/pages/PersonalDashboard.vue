@@ -9,6 +9,7 @@ import ActivityChart from "../components/charts/ActivityChart.vue";
 import ActivityHeatmap from "../components/charts/ActivityHeatmap.vue";
 import DistanceChart from "../components/charts/DistanceChart.vue";
 import SpeedChart from "../components/charts/SpeedChart.vue";
+import WeekdayChart from "../components/charts/WeekdayChart.vue";
 import { useApi } from "../composables/useApi.js";
 import type { Activity, ActivityType, PersonalStats } from "../types/index.js";
 
@@ -45,7 +46,10 @@ watch(selectedType, () => loadData(), { immediate: true });
 
 		<StatsCards :stats="stats" />
 
-		<ActivityHeatmap :activities="activities" />
+		<div class="grid gap-6 lg:grid-cols-2">
+			<ActivityHeatmap :activities="activities" />
+			<WeekdayChart :activities="activities" />
+		</div>
 
 		<PersonalRecords :activities="activities" />
 

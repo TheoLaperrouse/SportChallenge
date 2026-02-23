@@ -15,18 +15,23 @@ interface HeatmapDay {
 }
 
 const heatmapData = computed(() => {
-	const today = new Date();
-	today.setHours(0, 0, 0, 0);
+	// todayMidnight = minuit du jour courant (pour les comparaisons du calendrier)
+	const todayMidnight = new Date();
+	todayMidnight.setHours(0, 0, 0, 0);
 
-	const startDate = new Date(today);
+	// endOfToday = fin du jour courant (pour inclure toutes les activités du jour)
+	const endOfToday = new Date();
+	endOfToday.setHours(23, 59, 59, 999);
+
+	const startDate = new Date(todayMidnight);
 	startDate.setMonth(startDate.getMonth() - 4);
 
 	const dailyCounts = new Map<string, number>();
 	for (const a of props.activities) {
 		if (!a.startDate) continue;
 		const date = new Date(a.startDate);
-		if (date >= startDate && date <= today) {
-			const key = date.toISOString().split("T")[0];
+		if (date >= startDate && date <= endOfToday) {
+			const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 			dailyCounts.set(key, (dailyCounts.get(key) ?? 0) + 1);
 		}
 	}
@@ -38,14 +43,14 @@ const heatmapData = computed(() => {
 
 	const weeks: HeatmapDay[][] = [];
 
-	while (cursor <= today) {
+	while (cursor <= todayMidnight) {
 		const week: HeatmapDay[] = [];
 		for (let i = 0; i < 7; i++) {
-			const key = cursor.toISOString().split("T")[0];
+			const key = `${cursor.getFullYear()}-${String(cursor.getMonth() + 1).padStart(2, "0")}-${String(cursor.getDate()).padStart(2, "0")}`;
 			week.push({
 				date: key,
 				count: dailyCounts.get(key) ?? 0,
-				inRange: cursor >= startDate && cursor <= today,
+				inRange: cursor >= startDate && cursor <= todayMidnight,
 			});
 			cursor.setDate(cursor.getDate() + 1);
 		}
@@ -65,7 +70,9 @@ function getCellColor(day: HeatmapDay): string {
 }
 
 function formatTooltip(day: HeatmapDay): string {
-	const date = new Date(day.date);
+	// Parse YYYY-MM-DD as local date to avoid UTC offset shifting the day
+	const [year, month, d] = day.date.split("-").map(Number);
+	const date = new Date(year, month - 1, d);
 	const formatted = date.toLocaleDateString("fr-FR", {
 		day: "numeric",
 		month: "short",
@@ -104,7 +111,7 @@ const monthLabels = computed(() => {
 			<div class="inline-flex flex-col gap-1">
 				<!-- Month labels -->
 				<div class="flex gap-[3px] pl-8 text-xs text-concrete">
-					<template v-for="(week, weekIdx) in heatmapData" :key="'m' + weekIdx">
+					<template v-for="(_, weekIdx) in heatmapData" :key="'m' + weekIdx">
 						<div class="h-3 w-3">
 							<span
 								v-if="monthLabels.find((m) => m.col === weekIdx)"

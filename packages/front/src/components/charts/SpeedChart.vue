@@ -23,30 +23,38 @@ const PUNCH = "#FF6A00";
 const CONCRETE = "#8E8E8E";
 const OFFWHITE = "#F5F5F5";
 
+function getWeekMonday(date: Date): string {
+	const d = new Date(date);
+	d.setHours(0, 0, 0, 0);
+	d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+	return d.toISOString().split("T")[0];
+}
+
+function formatWeekLabel(isoDate: string): string {
+	const [year, month, day] = isoDate.split("-");
+	return `${day}/${month}/${year.slice(2)}`;
+}
+
 const chartData = computed(() => {
-	const monthly: Record<string, { totalSpeed: number; count: number }> = {};
+	const weekly: Record<string, { totalSpeed: number; count: number }> = {};
 
 	for (const a of props.activities) {
 		if (!a.startDate || !a.averageSpeed) continue;
-		const date = new Date(a.startDate);
-		const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
-		if (!monthly[key]) monthly[key] = { totalSpeed: 0, count: 0 };
-		monthly[key].totalSpeed += a.averageSpeed;
-		monthly[key].count += 1;
+		const key = getWeekMonday(new Date(a.startDate));
+		if (!weekly[key]) weekly[key] = { totalSpeed: 0, count: 0 };
+		weekly[key].totalSpeed += a.averageSpeed;
+		weekly[key].count += 1;
 	}
 
-	const sortedKeys = Object.keys(monthly).sort();
+	const sortedKeys = Object.keys(weekly).sort();
 
 	return {
-		labels: sortedKeys.map((k) => {
-			const [year, month] = k.split("-");
-			return `${month}/${year}`;
-		}),
+		labels: sortedKeys.map(formatWeekLabel),
 		datasets: [
 			{
 				label: "Vitesse moyenne (km/h)",
 				data: sortedKeys.map((k) => {
-					const avg = monthly[k].totalSpeed / monthly[k].count;
+					const avg = weekly[k].totalSpeed / weekly[k].count;
 					return Math.round(avg * 3.6 * 10) / 10;
 				}),
 				borderColor: PUNCH,
@@ -64,7 +72,7 @@ const chartOptions = {
 	maintainAspectRatio: false,
 	plugins: {
 		legend: { display: false },
-		title: { display: true, text: "Vitesse moyenne par mois", color: OFFWHITE },
+		title: { display: true, text: "Vitesse moyenne par semaine", color: OFFWHITE },
 	},
 	scales: {
 		y: {

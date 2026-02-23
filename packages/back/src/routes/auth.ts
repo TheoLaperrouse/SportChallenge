@@ -4,6 +4,7 @@ import { deleteCookie, getCookie, setCookie } from "hono/cookie";
 import { db } from "../db/connection.js";
 import { sessions, users } from "../db/schema.js";
 import { type AuthEnv, authMiddleware } from "../middleware/auth.js";
+import { syncUserActivities } from "../scheduler/sync.js";
 import { exchangeCode, getAuthUrl } from "../services/strava.js";
 
 export const authRoutes = new Hono<AuthEnv>();
@@ -81,6 +82,16 @@ authRoutes.get("/callback", async (c) => {
 			sameSite: "Lax",
 			path: "/",
 			maxAge: 30 * 24 * 60 * 60,
+		});
+
+		syncUserActivities({
+			id: userId,
+			username: athlete.username,
+			accessToken: tokenData.access_token,
+			refreshToken: tokenData.refresh_token,
+			tokenExpiresAt: new Date(tokenData.expires_at * 1000),
+		}).catch((err) => {
+			console.error(`[Auth] Background sync failed for user ${userId}:`, err);
 		});
 
 		return c.redirect(`${frontendUrl}/dashboard`);

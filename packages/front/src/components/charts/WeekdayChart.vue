@@ -18,41 +18,33 @@ const props = defineProps<{
 	activities: Activity[];
 }>();
 
-// Colors from palette
 const PUNCH = "#FF6A00";
 const CONCRETE = "#8E8E8E";
 const OFFWHITE = "#F5F5F5";
 
-function getWeekMonday(date: Date): string {
-	const d = new Date(date);
-	d.setHours(0, 0, 0, 0);
-	d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
-	return d.toISOString().split("T")[0];
-}
-
-function formatWeekLabel(isoDate: string): string {
-	const [year, month, day] = isoDate.split("-");
-	return `${day}/${month}/${year.slice(2)}`;
-}
+const DAYS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
 
 const chartData = computed(() => {
-	const weekly: Record<string, number> = {};
+	// Index 0 = Monday, ..., 6 = Sunday (ISO week)
+	const counts = [0, 0, 0, 0, 0, 0, 0];
 
 	for (const a of props.activities) {
-		if (!a.startDate || !a.distance) continue;
-		const key = getWeekMonday(new Date(a.startDate));
-		weekly[key] = (weekly[key] ?? 0) + a.distance / 1000;
+		if (!a.startDate) continue;
+		const day = new Date(a.startDate).getDay(); // 0=Sun, 1=Mon, ...6=Sat
+		const isoIdx = (day + 6) % 7; // convert to Mon=0 ... Sun=6
+		counts[isoIdx]++;
 	}
 
-	const sortedKeys = Object.keys(weekly).sort();
-
 	return {
-		labels: sortedKeys.map(formatWeekLabel),
+		labels: DAYS,
 		datasets: [
 			{
-				label: "Distance (km)",
-				data: sortedKeys.map((k) => Math.round(weekly[k] * 10) / 10),
-				backgroundColor: PUNCH,
+				label: "Activités",
+				data: counts,
+				backgroundColor: counts.map((_, i) => {
+					const max = Math.max(...counts);
+					return max > 0 && counts[i] === max ? PUNCH : `${PUNCH}66`;
+				}),
 				borderRadius: 4,
 			},
 		],
@@ -64,18 +56,17 @@ const chartOptions = {
 	maintainAspectRatio: false,
 	plugins: {
 		legend: { display: false },
-		title: { display: true, text: "Distance par semaine", color: OFFWHITE },
+		title: { display: true, text: "Activités par jour de la semaine", color: OFFWHITE },
 	},
 	scales: {
 		y: {
 			beginAtZero: true,
-			title: { display: true, text: "km", color: CONCRETE },
-			ticks: { color: CONCRETE },
+			ticks: { stepSize: 1, color: CONCRETE },
 			grid: { color: "rgba(142, 142, 142, 0.2)" },
 		},
 		x: {
 			ticks: { color: CONCRETE },
-			grid: { color: "rgba(142, 142, 142, 0.2)" },
+			grid: { display: false },
 		},
 	},
 };

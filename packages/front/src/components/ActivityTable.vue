@@ -35,8 +35,9 @@ function formatSpeed(mps: number | null): string {
 
 <template>
 	<div class="overflow-x-auto rounded-lg border border-dark-border bg-dark-card">
-		<table class="min-w-full divide-y divide-dark-border">
-			<thead class="bg-dark-elevated">
+		<div class="max-h-122.5 overflow-y-auto">
+			<table class="min-w-full divide-y divide-dark-border">
+			<thead class="sticky top-0 z-10 bg-dark-elevated">
 				<tr>
 					<th class="px-2 py-3 text-left text-xs font-medium uppercase text-concrete sm:px-4">Date</th>
 					<th class="px-2 py-3 text-left text-xs font-medium uppercase text-concrete sm:px-4">Nom</th>
@@ -77,6 +78,7 @@ function formatSpeed(mps: number | null): string {
 					</td>
 				</tr>
 			</tbody>
-		</table>
+			</table>
+		</div>
 	</div>
 </template>
