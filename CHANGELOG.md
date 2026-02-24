@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.6.0...v1.7.0) (2026-02-24)
+
+
+### Features
+
+* better responsiveness / reorganize widget ([1227479](https://github.com/TheoLaperrouse/SportChallenge/commit/1227479f83455e32734c7783bd51c59f14835389))
+
 # [1.6.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.5.0...v1.6.0) (2026-02-24)
 
 
