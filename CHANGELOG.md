@@ -1,3 +1,11 @@
+# [1.6.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.5.0...v1.6.0) (2026-02-24)
+
+
+### Features
+
+* add notifications for overtake ([d3b5788](https://github.com/TheoLaperrouse/SportChallenge/commit/d3b57885a416b5c701fa4f4b42d1f2252a74982f))
+* color associated to athlete ([1ef8c07](https://github.com/TheoLaperrouse/SportChallenge/commit/1ef8c07e21891c0d740c915cabb55f99e5400cba))
+
 # [1.5.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.4.0...v1.5.0) (2026-02-23)
 
 

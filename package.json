@@ -1,6 +1,6 @@
 {
 	"name": "sport-challenge",
-	"version": "1.5.0",
+	"version": "1.6.0",
 	"private": true,
 	"scripts": {
 		"dev:back": "pnpm --filter back dev",
@@ -14,7 +14,10 @@
 		"db:migrate": "pnpm --filter back db:migrate"
 	},
 	"pnpm": {
-		"onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
+		"onlyBuiltDependencies": [
+			"@biomejs/biome",
+			"esbuild"
+		]
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
