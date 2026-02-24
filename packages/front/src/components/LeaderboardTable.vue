@@ -20,7 +20,7 @@ function formatDuration(seconds: string | null): string {
 </script>
 
 <template>
-	<div class="overflow-x-auto rounded-lg border border-dark-border bg-dark-card">
+	<div class="min-w-0 overflow-x-auto rounded-lg border border-dark-border bg-dark-card">
 		<table class="min-w-full divide-y divide-dark-border">
 			<thead class="bg-dark-elevated">
 				<tr>

@@ -46,21 +46,21 @@ watch(selectedType, () => loadData(), { immediate: true });
 
 		<StatsCards :stats="stats" />
 
+		<PersonalRecords :activities="activities" />
+
+		<div class="grid gap-6 lg:grid-cols-2">
+			<DistanceChart :activities="activities" />
+			<ActivityChart :activities="activities" />
+		</div>
+
 		<div class="grid gap-6 lg:grid-cols-2">
 			<ActivityHeatmap :activities="activities" />
 			<WeekdayChart :activities="activities" />
 		</div>
 
-		<PersonalRecords :activities="activities" />
-
 		<div class="grid gap-6 lg:grid-cols-2">
 			<ActivityStreak :activities="activities" />
 			<SpeedChart :activities="activities" />
-		</div>
-
-		<div class="grid gap-6 lg:grid-cols-2">
-			<DistanceChart :activities="activities" />
-			<ActivityChart :activities="activities" />
 		</div>
 
 		<ActivityTable :activities="activities" />

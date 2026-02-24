@@ -48,7 +48,7 @@ function getActivityIcon(type: string | null): string {
 </script>
 
 <template>
-	<div class="rounded-lg border border-dark-border bg-dark-card">
+	<div class="min-w-0 rounded-lg border border-dark-border bg-dark-card">
 		<div class="border-b border-dark-border px-4 py-4 sm:px-6">
 			<h2 class="text-lg font-semibold text-offwhite">Activités récentes</h2>
 		</div>

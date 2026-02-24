@@ -277,7 +277,7 @@ dashboardRoutes.get("/recent", async (c) => {
 		.innerJoin(users, eq(activities.userId, users.id))
 		.where(whereClause)
 		.orderBy(desc(activities.startDate))
-		.limit(6);
+		.limit(5);
 
 	return c.json(recentActivities);
 });

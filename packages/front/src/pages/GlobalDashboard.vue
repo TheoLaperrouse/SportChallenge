@@ -90,14 +90,14 @@ watch(selectedType, () => loadData(), { immediate: true });
 			</div>
 		</div>
 
-		<CumulativeDistanceChart :data="timeseriesData" />
-
-		<CumulativeElevationChart :data="elevationTimeseriesData" />
-
 		<div class="grid gap-6 lg:grid-cols-2">
 			<LeaderboardTable :leaderboard="leaderboard" />
 			<RecentActivitiesList :activities="recentActivities" />
 		</div>
+
+		<CumulativeDistanceChart :data="timeseriesData" />
+
+		<CumulativeElevationChart :data="elevationTimeseriesData" />
 
 		<ElevationRatioTable :leaderboard="leaderboard" />
 	</div>
