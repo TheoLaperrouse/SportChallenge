@@ -13,6 +13,7 @@ import "chartjs-adapter-date-fns";
 import { computed } from "vue";
 import { Line } from "vue-chartjs";
 import type { AthleteTimeseries } from "../../types/index.js";
+import { getAthleteColor } from "../../utils/athleteColors.js";
 
 ChartJS.register(TimeScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
@@ -22,17 +23,6 @@ const props = defineProps<{
 
 const CONCRETE = "#8E8E8E";
 const OFFWHITE = "#F5F5F5";
-
-const COLORS = [
-	"#284b63",
-	"#b4b8ab",
-	"#153243",
-	"#f4f9e9",
-	"#eef0eb",
-	"#60A5FA",
-	"#22D3EE",
-	"#FB923C",
-];
 
 function getAthleteName(athlete: AthleteTimeseries): string {
 	if (athlete.firstname && athlete.lastname) {
@@ -52,8 +42,8 @@ const chartData = computed(() => {
 	const sortedDates = Array.from(allDates).sort();
 
 	// Build datasets for each athlete
-	const datasets = props.data.map((athlete, index) => {
-		const color = COLORS[index % COLORS.length];
+	const datasets = props.data.map((athlete) => {
+		const color = getAthleteColor(athlete.userId);
 		const dataMap = new Map(athlete.data.map((p) => [p.date, p.cumulativeDistance]));
 
 		// Fill in gaps: carry forward the last known cumulative value

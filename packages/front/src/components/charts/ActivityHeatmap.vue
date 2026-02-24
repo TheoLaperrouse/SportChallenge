@@ -107,40 +107,41 @@ const monthLabels = computed(() => {
 <template>
 	<div class="rounded-lg border border-dark-border bg-dark-card p-4 sm:p-6">
 		<h3 class="mb-4 text-sm font-medium text-offwhite">Activité des 4 derniers mois</h3>
-		<div class="overflow-x-auto">
-			<div class="inline-flex flex-col gap-1">
-				<!-- Month labels -->
-				<div class="flex gap-[3px] pl-8 text-xs text-concrete">
-					<template v-for="(_, weekIdx) in heatmapData" :key="'m' + weekIdx">
-						<div class="h-3 w-3">
-							<span
-								v-if="monthLabels.find((m) => m.col === weekIdx)"
-								class="whitespace-nowrap"
-							>
-								{{ monthLabels.find((m) => m.col === weekIdx)?.label }}
-							</span>
-						</div>
-					</template>
+		<div class="flex flex-col gap-1">
+			<!-- Month labels: aligned with week columns -->
+			<div class="flex gap-0.75 pl-7 text-xs text-concrete">
+				<div
+					v-for="(_, weekIdx) in heatmapData"
+					:key="'m' + weekIdx"
+					class="min-w-0 flex-1 overflow-hidden"
+				>
+					<span v-if="monthLabels.find((m) => m.col === weekIdx)" class="whitespace-nowrap">
+						{{ monthLabels.find((m) => m.col === weekIdx)?.label }}
+					</span>
 				</div>
-				<!-- Grid -->
-				<div class="flex gap-1">
-					<!-- Day labels -->
-					<div class="flex flex-col gap-[3px] pr-1 text-xs text-concrete">
-						<div v-for="(label, i) in DAY_LABELS" :key="i" class="flex h-3 w-5 items-center">
-							{{ label }}
-						</div>
+			</div>
+			<!-- Grid -->
+			<div class="flex gap-1">
+				<!-- Day labels: fixed width, same row height as cells -->
+				<div class="flex shrink-0 flex-col gap-0.75 pr-1 text-xs text-concrete">
+					<div v-for="(label, i) in DAY_LABELS" :key="i" class="flex h-3 w-5 items-center sm:h-4">
+						{{ label }}
 					</div>
-					<!-- Weeks -->
-					<div class="flex gap-[3px]">
-						<div v-for="(week, weekIdx) in heatmapData" :key="weekIdx" class="flex flex-col gap-[3px]">
-							<div
-								v-for="(day, dayIdx) in week"
-								:key="dayIdx"
-								:class="getCellColor(day)"
-								:title="day.inRange ? formatTooltip(day) : ''"
-								class="h-3 w-3 rounded-sm"
-							/>
-						</div>
+				</div>
+				<!-- Weeks: stretch to fill remaining space -->
+				<div class="flex min-w-0 flex-1 gap-0.75">
+					<div
+						v-for="(week, weekIdx) in heatmapData"
+						:key="weekIdx"
+						class="flex min-w-0 flex-1 flex-col gap-0.75"
+					>
+						<div
+							v-for="(day, dayIdx) in week"
+							:key="dayIdx"
+							:class="getCellColor(day)"
+							:title="day.inRange ? formatTooltip(day) : ''"
+							class="h-3 w-full rounded-sm sm:h-4"
+						/>
 					</div>
 				</div>
 			</div>

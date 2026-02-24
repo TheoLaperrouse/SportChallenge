@@ -6,6 +6,7 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import ActivityTypeFilter from "../components/ActivityTypeFilter.vue";
 import { useApi } from "../composables/useApi.js";
 import type { ActivityType, MapActivity } from "../types/index.js";
+import { getAthleteColor } from "../utils/athleteColors.js";
 
 const { get } = useApi();
 
@@ -16,28 +17,6 @@ const mapContainer = ref<HTMLDivElement | null>(null);
 
 let map: L.Map | null = null;
 let polylineLayer: L.LayerGroup | null = null;
-
-const ATHLETE_COLORS = [
-	"#F87171",
-	"#60A5FA",
-	"#34D399",
-	"#FBBF24",
-	"#A78BFA",
-	"#FB923C",
-	"#22D3EE",
-	"#F472B6",
-	"#818CF8",
-	"#4ADE80",
-];
-
-const athleteColorMap = new Map<number, string>();
-
-function getAthleteColor(userId: number): string {
-	if (!athleteColorMap.has(userId)) {
-		athleteColorMap.set(userId, ATHLETE_COLORS[athleteColorMap.size % ATHLETE_COLORS.length]);
-	}
-	return athleteColorMap.get(userId) ?? ATHLETE_COLORS[0];
-}
 
 function formatDistance(meters: number | null): string {
 	if (!meters) return "0 km";
@@ -80,7 +59,6 @@ function buildPopupContent(activity: MapActivity): string {
 function renderRoutes() {
 	if (!map || !polylineLayer) return;
 	polylineLayer.clearLayers();
-	athleteColorMap.clear();
 
 	const bounds: L.LatLng[] = [];
 

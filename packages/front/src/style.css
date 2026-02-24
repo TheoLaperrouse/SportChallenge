@@ -15,6 +15,29 @@
 	color: #b4b8ab;
 }
 
+/* Custom scrollbar — dark theme */
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #404040 transparent;
+}
+*::-webkit-scrollbar {
+	width: 6px;
+	height: 6px;
+}
+*::-webkit-scrollbar-track {
+	background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: #404040;
+	border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+	background-color: #8e8e8e;
+}
+*::-webkit-scrollbar-corner {
+	background: transparent;
+}
+
 @theme {
 	/* Street Sport Palette */
 	--color-punch: #ff6a00;
