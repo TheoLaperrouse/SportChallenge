@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
 
   back:
+    image: ghcr.io/theolaperrouse/sport-challenge-back:latest
     build:
       context: .
       dockerfile: packages/back/Dockerfile
@@ -40,6 +41,7 @@ services:
     restart: unless-stopped
 
   front:
+    image: ghcr.io/theolaperrouse/sport-challenge-front:latest
     build:
       context: .
       dockerfile: packages/front/Dockerfile
