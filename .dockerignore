@@ -1,0 +1,24 @@
+# Dependencies — never copy local node_modules into Docker context
+node_modules
+**/node_modules
+
+# Build outputs — rebuilt fresh in Docker
+**/dist
+
+# Version control
+.git
+.gitignore
+.github
+
+# Environment
+.env
+.env.*
+
+# Editor / tools
+.vscode
+.idea
+.claude
+
+# OS
+.DS_Store
+Thumbs.db
