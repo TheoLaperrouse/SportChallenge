@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.0...v1.7.1) (2026-03-04)
+
+
+### Bug Fixes
+
+* fallback to something when no avatar / delete cache from compose ([0828878](https://github.com/TheoLaperrouse/SportChallenge/commit/0828878a0d3ede6956016191e1f28ae38bca0b86))
+
 # [1.7.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.6.0...v1.7.0) (2026-02-24)
 
 
