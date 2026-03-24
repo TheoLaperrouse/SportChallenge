@@ -243,6 +243,41 @@ dashboardRoutes.get("/elevation-timeseries", async (c) => {
 	return c.json(Array.from(userMap.values()));
 });
 
+dashboardRoutes.get("/athlete-stats", async (c) => {
+	const typeFilter = c.req.query("type");
+
+	const conditions = [];
+
+	if (typeFilter && TYPE_GROUPS[typeFilter]) {
+		conditions.push(inArray(activities.type, TYPE_GROUPS[typeFilter]));
+	}
+
+	if (config.challenge.startDate) {
+		conditions.push(gte(activities.startDate, config.challenge.startDate));
+	}
+
+	const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
+
+	const rows = await db
+		.select({
+			userId: users.id,
+			firstname: users.firstname,
+			lastname: users.lastname,
+			avatarUrl: users.avatarUrl,
+			maxDistance: max(activities.distance),
+			avgSpeed: sql<string>`sum(${activities.distance} * ${activities.averageSpeed}) / nullif(sum(${activities.distance}), 0)`,
+			avgDistancePerActivity: sql<string>`sum(${activities.distance}) / nullif(count(${activities.id}), 0)`,
+			activeWeeks: sql<number>`count(distinct DATE_TRUNC('week', ${activities.startDate}))`,
+		})
+		.from(activities)
+		.innerJoin(users, eq(activities.userId, users.id))
+		.where(whereClause)
+		.groupBy(users.id, users.firstname, users.lastname, users.avatarUrl)
+		.orderBy(sql`sum(${activities.distance}) desc nulls last`);
+
+	return c.json(rows);
+});
+
 dashboardRoutes.get("/recent", async (c) => {
 	const typeFilter = c.req.query("type");
 

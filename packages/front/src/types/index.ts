@@ -61,6 +61,17 @@ export interface GlobalDashboardResponse {
 	stats: GlobalStats;
 }
 
+export interface AthleteDetailedStats {
+	userId: number;
+	firstname: string | null;
+	lastname: string | null;
+	avatarUrl: string | null;
+	maxDistance: number | null;
+	avgSpeed: string | null;
+	avgDistancePerActivity: string | null;
+	activeWeeks: number;
+}
+
 export type ActivityType = "Run" | "Ride" | "Swim";
 
 export interface TimeseriesDataPoint {
