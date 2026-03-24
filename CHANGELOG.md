@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.2...v1.8.0) (2026-03-24)
+
+
+### Features
+
+* add a stats widget ([bbde87e](https://github.com/TheoLaperrouse/SportChallenge/commit/bbde87e0185eb4ed82c052ce9367dd217d9d777a))
+
 ## [1.7.2](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.1...v1.7.2) (2026-03-06)
 
 
