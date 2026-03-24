@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.1...v1.7.2) (2026-03-06)
+
+
+### Bug Fixes
+
+* fix avg speed / notifications ([bf9b550](https://github.com/TheoLaperrouse/SportChallenge/commit/bf9b550b4be2ebbe3dcc10e9644f470201787772))
+
 ## [1.7.1](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.0...v1.7.1) (2026-03-04)
 
 
