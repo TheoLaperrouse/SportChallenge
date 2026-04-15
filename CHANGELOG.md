@@ -1,3 +1,10 @@
+## [1.8.1](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.8.0...v1.8.1) (2026-04-15)
+
+
+### Bug Fixes
+
+* less call to strava API ([fcfd5a3](https://github.com/TheoLaperrouse/SportChallenge/commit/fcfd5a3c28fad54d51bde50c366802336ccea7f5))
+
 # [1.8.0](https://github.com/TheoLaperrouse/SportChallenge/compare/v1.7.2...v1.8.0) (2026-03-24)
 
 
