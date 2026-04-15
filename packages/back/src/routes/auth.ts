@@ -94,13 +94,17 @@ authRoutes.get("/callback", async (c) => {
 			maxAge: 30 * 24 * 60 * 60,
 		});
 
-		syncUserActivities({
-			id: userId,
-			username: athlete.username,
-			accessToken: tokenData.access_token,
-			refreshToken: tokenData.refresh_token,
-			tokenExpiresAt: new Date(tokenData.expires_at * 1000),
-		}).catch((err) => {
+		syncUserActivities(
+			{
+				id: userId,
+				username: athlete.username,
+				accessToken: tokenData.access_token,
+				refreshToken: tokenData.refresh_token,
+				tokenExpiresAt: new Date(tokenData.expires_at * 1000),
+				lastSyncedAt: null,
+			},
+			{ full: true },
+		).catch((err) => {
 			console.error(`[Auth] Background sync failed for user ${userId}:`, err);
 		});
 

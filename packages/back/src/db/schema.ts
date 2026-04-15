@@ -20,6 +20,7 @@ export const users = pgTable("users", {
 	accessToken: varchar("access_token", { length: 512 }),
 	refreshToken: varchar("refresh_token", { length: 512 }),
 	tokenExpiresAt: timestamp("token_expires_at"),
+	lastSyncedAt: timestamp("last_synced_at"),
 	createdAt: timestamp("created_at").defaultNow().notNull(),
 	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });

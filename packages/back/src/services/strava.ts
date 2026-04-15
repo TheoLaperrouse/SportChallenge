@@ -92,11 +92,15 @@ export async function fetchActivities(
 	accessToken: string,
 	page = 1,
 	perPage = 100,
+	after?: Date,
 ): Promise<StravaActivity[]> {
 	const params = new URLSearchParams({
 		page: String(page),
 		per_page: String(perPage),
 	});
+	if (after) {
+		params.set("after", String(Math.floor(after.getTime() / 1000)));
+	}
 	const response = await fetch(`${STRAVA_API_URL}/athlete/activities?${params.toString()}`, {
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});

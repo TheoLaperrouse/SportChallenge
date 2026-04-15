@@ -10,6 +10,7 @@ interface UserForSync {
 	accessToken: string | null;
 	refreshToken: string | null;
 	tokenExpiresAt: Date | null;
+	lastSyncedAt: Date | null;
 }
 
 const TYPE_GROUPS: Record<string, string[]> = {
@@ -242,7 +243,11 @@ async function checkOvertaking(): Promise<void> {
 	}
 }
 
-export async function syncUserActivities(user: UserForSync): Promise<number> {
+export async function syncUserActivities(
+	user: UserForSync,
+	options: { full?: boolean } = {},
+): Promise<number> {
+	const full = options.full ?? false;
 	if (!user.accessToken || !user.refreshToken) {
 		console.log(`[Scheduler] User ${user.id} (${user.username}) has no tokens, skipping`);
 		return 0;
@@ -276,9 +281,11 @@ export async function syncUserActivities(user: UserForSync): Promise<number> {
 	let totalSynced = 0;
 	let hasMore = true;
 	const syncedStravaIds: number[] = [];
+	const syncStartedAt = new Date();
+	const after = full ? undefined : (user.lastSyncedAt ?? undefined);
 
 	while (hasMore) {
-		const stravaActivities = await fetchActivities(tokens.accessToken, page, 100);
+		const stravaActivities = await fetchActivities(tokens.accessToken, page, 100, after);
 
 		if (stravaActivities.length === 0) {
 			hasMore = false;
@@ -336,8 +343,8 @@ export async function syncUserActivities(user: UserForSync): Promise<number> {
 		page++;
 	}
 
-	// Clean up activities deleted on Strava
-	if (syncedStravaIds.length > 0) {
+	// Clean up activities deleted on Strava — only on full sync (we fetched everything)
+	if (full && syncedStravaIds.length > 0) {
 		const deleted = await db
 			.delete(activities)
 			.where(and(eq(activities.userId, user.id), notInArray(activities.stravaId, syncedStravaIds)))
@@ -349,11 +356,17 @@ export async function syncUserActivities(user: UserForSync): Promise<number> {
 		}
 	}
 
+	await db
+		.update(users)
+		.set({ lastSyncedAt: syncStartedAt, updatedAt: new Date() })
+		.where(eq(users.id, user.id));
+
 	return totalSynced;
 }
 
-async function syncAllUsers(): Promise<void> {
-	console.log("[Scheduler] Starting sync for all users");
+async function syncAllUsers(options: { full?: boolean } = {}): Promise<void> {
+	const full = options.full ?? false;
+	console.log(`[Scheduler] Starting ${full ? "full" : "incremental"} sync for all users`);
 	const allUsers = await db
 		.select({
 			id: users.id,
@@ -361,6 +374,7 @@ async function syncAllUsers(): Promise<void> {
 			accessToken: users.accessToken,
 			refreshToken: users.refreshToken,
 			tokenExpiresAt: users.tokenExpiresAt,
+			lastSyncedAt: users.lastSyncedAt,
 		})
 		.from(users);
 
@@ -368,7 +382,7 @@ async function syncAllUsers(): Promise<void> {
 
 	for (const user of allUsers) {
 		try {
-			const synced = await syncUserActivities(user);
+			const synced = await syncUserActivities(user, { full });
 			console.log(`[Scheduler] Synced ${synced} activities for user ${user.id} (${user.username})`);
 		} catch (error) {
 			console.error(`[Scheduler] Error syncing user ${user.id} (${user.username}):`, error);
@@ -387,12 +401,19 @@ async function syncAllUsers(): Promise<void> {
 }
 
 export function startScheduler(): void {
-	// Run every 15 minutes
-	cron.schedule("*/15 * * * *", () => {
-		syncAllUsers().catch((error) => {
-			console.error("[Scheduler] Unhandled error in sync job:", error);
+	// Incremental sync every 30 minutes (uses `after` param to fetch only new activities)
+	cron.schedule("*/30 * * * *", () => {
+		syncAllUsers({ full: false }).catch((error) => {
+			console.error("[Scheduler] Unhandled error in incremental sync job:", error);
 		});
 	});
 
-	console.log("[Scheduler] Sync scheduler started (every 15 minutes)");
+	// Full sync once a day at 03:00 (also detects deleted activities)
+	cron.schedule("0 3 * * *", () => {
+		syncAllUsers({ full: true }).catch((error) => {
+			console.error("[Scheduler] Unhandled error in full sync job:", error);
+		});
+	});
+
+	console.log("[Scheduler] Sync scheduler started (incremental every 30min, full daily at 03:00)");
 }
